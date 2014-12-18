@@ -89,7 +89,7 @@
             throw new Error('pattern does not contain a chain: {package-name}');
         }
 
-        patterPath = pattern.replace("%7Bpackage-name%7D", "{package-name}");
+        patterPath = decodeURIComponent(pattern);
     }
 
     module = {
