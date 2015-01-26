@@ -70,11 +70,12 @@
      * @param {string} filename
      * @param {Function} [callback]
      * @param {Object} [elemAttributes]
+     * @param {int} [callTimeout]
      */
     function inject(filename, callback, elemAttributes, callTimeout) {
         var path, ctimeout;
 
-        if (callTimeout !== undefined) {
+        if (callTimeout) {
             ctimeout = callTimeout;
         } else {
             ctimeout = callbackTimeout;
@@ -96,7 +97,7 @@
         if (injected[path] === undefined) {
             injected[path] = true;
 
-            if (callback !== undefined) {
+            if (callback) {
                 yepnope.injectCss(path, function () {
                     if (ctimeout > 0) {
                         setTimeout(callback, ctimeout);
