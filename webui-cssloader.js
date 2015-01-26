@@ -17,7 +17,7 @@
     "use strict";
 
     var timeout = 5000, module, injected = {}, injectMode = 'static',
-        basePath = '.', patterPath = './{package-name}';
+        basePath = '.', patternPath = './{package-name}', definitions = {};
 
     /**
      * Limit czasu wczytywania arkusza
@@ -25,6 +25,35 @@
      */
     function setTimeout(time) {
         timeout = time;
+    }
+
+    /**
+     * Pobieranie ścieżki do pliku css
+     * @param {string} prop
+     * @returns {string|undefined}
+     */
+    function getPath(prop) {
+        return definitions[prop];
+    }
+
+    /**
+     * Definiowanie ścieżek do plików css
+     * @param {Object} def
+     */
+    function definePath(def) {
+        var prop;
+
+        if (typeof def === 'object') {
+            for (prop in def) {
+                if(def.hasOwnProperty(prop)) {
+                    if (typeof def[prop] !== 'string') {
+                        throw new Error('definition value is not string');
+                    }
+
+                    definitions[prop] = def[prop];
+                }
+            }
+        }
     }
 
     /**
@@ -36,9 +65,13 @@
     function inject(filename, callback, elemAttributes) {
         var path;
 
+        if (filename.charAt(0) === '@' && getPath(filename.substring(1)) !== undefined) {
+            filename = getPath(filename.substring(1));
+        }
+
         switch (injectMode) {
             case 'dynamic':
-                path = patterPath.replace("{package-name}", encodeURIComponent(filename).replace(/%2F/g, "|"));
+                path = patternPath.replace("{package-name}", encodeURIComponent(filename).replace(/%2F/g, "|"));
                 break;
             case 'static':
             default:
@@ -82,7 +115,7 @@
      * Ustawienie dla trybu dynamic.
      * @param {string} pattern
      */
-    function setPatterPath(pattern) {
+    function setPatternPath(pattern) {
         if (typeof pattern !== 'string') {
             throw new Error('pattern is not string');
         }
@@ -92,7 +125,7 @@
             throw new Error('pattern does not contain a chain: {package-name}');
         }
 
-        patterPath = pattern;
+        patternPath = pattern;
     }
 
     module = {
@@ -100,7 +133,8 @@
         inject: inject,
         mode: setInjectMode,
         setBasePath: setBasePath,
-        setPatterPath: setPatterPath
+        setPatternPath: setPatternPath,
+        definePath: definePath
     };
 
     define("webui-cssloader", function () {
