@@ -71,8 +71,14 @@
      * @param {Function} [callback]
      * @param {Object} [elemAttributes]
      */
-    function inject(filename, callback, elemAttributes) {
-        var path;
+    function inject(filename, callback, elemAttributes, callTimeout) {
+        var path, ctimeout;
+
+        if (callTimeout !== undefined) {
+            ctimeout = callTimeout;
+        } else {
+            ctimeout = callbackTimeout;
+        }
 
         if (filename.charAt(0) === '@' && getPath(filename.substring(1)) !== undefined) {
             filename = getPath(filename.substring(1));
@@ -92,8 +98,8 @@
 
             if (callback !== undefined) {
                 yepnope.injectCss(path, function () {
-                    if (callbackTimeout > 0) {
-                        setTimeout(callback, callbackTimeout);
+                    if (ctimeout > 0) {
+                        setTimeout(callback, ctimeout);
                     } else {
                         yepnope.injectCss(path, callback, elemAttributes, timeout);
                     }
@@ -154,7 +160,8 @@
         mode: setInjectMode,
         setBasePath: setBasePath,
         setPatternPath: setPatternPath,
-        definePath: definePath
+        definePath: definePath,
+        setCallbackTimeout: setCallbackTimeout
     };
 
     define("webui-cssloader", function () {
