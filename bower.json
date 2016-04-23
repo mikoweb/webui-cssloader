@@ -12,5 +12,6 @@
         "vsymfo",
         "css loader"
     ],
-    "license": "GPLv2"
+    "license": "GPLv2",
+    "ignore": []
 }
