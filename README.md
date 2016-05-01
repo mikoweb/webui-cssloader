@@ -18,9 +18,17 @@ The above code defined two path:
 It's simple.
 
 ```javascript
-require(["webui-cssloader"], function (loader) {
+require(['webui-cssloader'], function (loader) {
     loader.inject('@bxslider', function () {
         $('.bxslider').bxSlider();
     });
+});
+```
+
+Load multiple files:
+
+```javascript
+loader.inject(['@select2', '@bxslider'], function () {
+    // ...
 });
 ```
