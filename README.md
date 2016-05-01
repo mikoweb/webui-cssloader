@@ -2,7 +2,6 @@
 
 ```javascript
 require(["webui-cssloader"], function (loader) {
-    loader.timeout(5000);
     loader.mode('static');
     loader.setBasePath('/css');
     loader.definePath({bxslider: 'lib/bxslider/bxslider', select2: 'lib/select2/select2'});
